@@ -31,7 +31,7 @@ function init() {
 function render() {
     
     console.log(board);
-    console.log(board[0]);
+    //console.log(board[0]);
     board.forEach(function (slotVal, slotIdx) {
         
         //get board values difference, append difference
@@ -44,7 +44,7 @@ function render() {
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
-           // div.appendChild(marble);
+            div.appendChild(marble);
         }
 
         
@@ -60,7 +60,7 @@ function render() {
 }
 
 function slotClick(evt) {
-    console.log(evt);
+    //console.log(evt);
     let slotId = 0;
     //console.log(typeof evt.target);
     if (evt.target.className === 'marble') {
@@ -77,34 +77,47 @@ function slotClick(evt) {
     let numMarbles = board[slotId];
     let curPos = slotId;
     let nextPos = curPos + 1;
-    while (numMarbles > 0) {
-        console.log('turn =' + turn);
-        if(!sameSide(turn, nextPos)) {
-            nextPos++;
+    for(let i = numMarbles; i > 0; i--) {
+        console.log(
+            'curPos' + ' ' + curPos + '\n' +
+            'nextPos' + ' ' + nextPos + '\n' 
+            
+        );
+
+        //console.log('turn =' + turn);
+        
+        if((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1));
+        if(nextPos === 13) {
+            nextPos = 0;
         }
+        //console.log(nextPos);
         board[nextPos] += 1;
         board[curPos] -= 1;
-        
+        /*
         if(nextPos === 13) {
             nextPos = 0;
             board[nextPos] += 1;
             
         }
+        */
         
-        console.log('pos' + nextPos);
-        nextPos++;
-        numMarbles--;
-        //console.log('#' + numMarbles);
-        //console.log('m' + board[nextPos]);
-        //console.log('marbles', numMarbles);
+       // console.log('pos' + nextPos);
+        
+        
+       numMarbles--;
+        console.log('numMarbles' + ' ' + numMarbles);
+      //  console.log('m' + board[nextPos]);
+      //  console.log('marbles', numMarbles);
         
         if(numMarbles === 0) {
-            //checkLastMarblePosition
-            turn = checkLastMarblePos();
+            let lastPos = nextPos;
+            turn = checkLastMarblePos(turn, lastPos);
+            console.log(lastPos);
         }
+        nextPos++;
     }
+    
     turn = 1;
-
     
     
     render();
@@ -114,14 +127,22 @@ function slotClick(evt) {
 
 }
 
-function checkLastMarblePos(lastPos) {
-
+function checkLastMarblePos(turn, lastPos) {
+    if((turn === 1 && lasPos === 6) || (turn === -1 && lastPos === 13)) {
+        return turn;
+    } else if(sameSide(turn, lastPos) && board[lastPos] === 0) {
+        if(turn === 1) {
+            board[6] += ;
+        } else {
+            board[13] += ;
+        }
+    }
 }
 
 function sameSide(turn, position) {
     
     if((turn === 1 && (position >= 0 && position <= 6))
-        || (turn === -1 && (slotId >= 7 && slotId <= 13))) {
+        || (turn === -1 && (position >= 7 && position <= 13))) {
         return true;
 
     }
