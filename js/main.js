@@ -1,7 +1,7 @@
 /*----- constants -----*/
 var COLORS = {
     '1': ['Player A', 'blue'], // (player 1)
-    '-1': ['Player B', 'red'] // (player 2)
+    '-1': ['Player B',  'red'] // (player 2)
 };
 
 /*----- app's state (variables) -----*/
@@ -29,15 +29,25 @@ function init() {
 }
 
 function render() {
+    
+    console.log(board);
+    console.log(board[0]);
     board.forEach(function (slotVal, slotIdx) {
+        
+        //get board values difference, append difference
+        
+
+        
         //console.log(slotVal);
         let div = document.getElementById(`slot${slotIdx}`);
 
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
-            div.appendChild(marble);
+           // div.appendChild(marble);
         }
+
+        
 
         if (winner === null) {
             msgEl.textContent = `${COLORS[turn][0]}'s turn`;
@@ -61,35 +71,74 @@ function slotClick(evt) {
     }
    // console.log(slotId);
 
-    if (slotId === 6 || slotId === 13) return;
+    if (slotId === 6 || slotId === 13 || board[slotId] === 0) return;
+    if(!sameSide(turn, slotId)) return alert('wrong side, choose again!');
 
     let numMarbles = board[slotId];
     let curPos = slotId;
     let nextPos = curPos + 1;
-    while (numMarbles >= 0) {
-        console.log(numMarbles);
+    while (numMarbles > 0) {
+        console.log('turn =' + turn);
+        if(!sameSide(turn, nextPos)) {
+            nextPos++;
+        }
         board[nextPos] += 1;
         board[curPos] -= 1;
+        
+        if(nextPos === 13) {
+            nextPos = 0;
+            board[nextPos] += 1;
+            
+        }
+        
+        console.log('pos' + nextPos);
         nextPos++;
         numMarbles--;
-
+        //console.log('#' + numMarbles);
+        //console.log('m' + board[nextPos]);
+        //console.log('marbles', numMarbles);
+        
+        if(numMarbles === 0) {
+            //checkLastMarblePosition
+            turn = checkLastMarblePos();
+        }
     }
+    turn = 1;
 
-    /*
-    if((turn === 1 && (slotId >= 0 && slotId < 6))
-        || (turn === -1 && (slotId >= 7 && slotId < 13))) {
-            let numMarbles = board[slotId];
-            let curPos = slotId;
-            let nextPos = curPos + 1;
-            while(numMarbles >= 0) {
-                board[nextPos] += 1;
-                board[curPos] -= 1;
-                nextPos++;
-                numMarbles--;
-            }
+    
+    
+    render();
+    
 
-    }
-    */
+    
 
 }
 
+function checkLastMarblePos(lastPos) {
+
+}
+
+function sameSide(turn, position) {
+    
+    if((turn === 1 && (position >= 0 && position <= 6))
+        || (turn === -1 && (slotId >= 7 && slotId <= 13))) {
+        return true;
+
+    }
+    return false;
+
+
+}
+
+//Remove children
+//document.querySelector('.marble').remove();
+
+/*
+var removeMarbles = document.querySelector('.slot');
+var fc = removeMarbles.firstChild;
+while(fc) {
+    console.log(removeMarbles);
+    removeMarbles.removeChild(fc);
+    fc = removeMarbles.firstChild;
+}
+*/
