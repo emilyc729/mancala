@@ -15,8 +15,8 @@ body {
 
 section.board {
     display: grid;
-    grid-template-columns: repeat(8, 10vmin);
-    grid-template-rows: repeat(2, 10vmin);
+    grid-template-columns: repeat(8, 12vmin);
+    grid-template-rows: repeat(2, 12vmin);
     grid-template-areas:
         "pot2 slot12 slot11 slot10 slot9 slot8 slot7 pot1"
         "pot2 slot0 slot1 slot2 slot3 slot4 slot5 pot1";

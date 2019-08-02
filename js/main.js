@@ -1,8 +1,11 @@
 /*----- constants -----*/
-var COLORS = {
+const COLORS = {
     '1': ['Player A', 'blue'], // (player 1)
     '-1': ['Player B',  'red'] // (player 2)
 };
+
+const potA = 6;
+const potB = 13;
 
 /*----- app's state (variables) -----*/
 let board, turn, winner;
@@ -32,6 +35,8 @@ function render() {
     
     console.log(board);
     //console.log(board[0]);
+    
+
     board.forEach(function (slotVal, slotIdx) {
         
         //get board values difference, append difference
@@ -47,6 +52,9 @@ function render() {
             div.appendChild(marble);
         }
 
+        
+        
+       
         
 
         if (winner === null) {
@@ -88,18 +96,14 @@ function slotClick(evt) {
         
         if((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1));
         if(nextPos === 13) {
+            board[nextPos] += 1;
             nextPos = 0;
+    
         }
         //console.log(nextPos);
         board[nextPos] += 1;
         board[curPos] -= 1;
-        /*
-        if(nextPos === 13) {
-            nextPos = 0;
-            board[nextPos] += 1;
-            
-        }
-        */
+       
         
        // console.log('pos' + nextPos);
         
@@ -117,8 +121,8 @@ function slotClick(evt) {
         nextPos++;
     }
     
-    turn = 1;
-    
+    winner = isWinner();
+    console.log(turn);
     
     render();
     
@@ -128,14 +132,18 @@ function slotClick(evt) {
 }
 
 function checkLastMarblePos(turn, lastPos) {
-    if((turn === 1 && lasPos === 6) || (turn === -1 && lastPos === 13)) {
+    if((turn === 1 && lastPos === 6) || (turn === -1 && lastPos === 13)) {
         return turn;
     } else if(sameSide(turn, lastPos) && board[lastPos] === 0) {
         if(turn === 1) {
-            board[6] += ;
+            board[6] += board[13-(lastPos + 1)];
+            return turn *= -1;
         } else {
-            board[13] += ;
+            board[13] += board[13-(lastPos + 1)];
+            return turn *= -1;
         }
+    } else {
+        return turn *= -1;
     }
 }
 
@@ -149,6 +157,24 @@ function sameSide(turn, position) {
     return false;
 
 
+}
+
+function isWinner() {
+    let arrA = board.slice(0, 6);
+    let arrB = board.slice(7, 13);
+    let sumA = arrA.reduce((a,b) => a + b, 0);
+    let sumB = arrB.reduce((a,b) => a + b, 0);
+  
+    if(sumA === 0 || sumB === 0) {
+        board[6] += sumA;
+        board[13] += sumB;
+        if(board[6] > board[13]) {
+            winner = 1;
+        } else {
+            winner = -1;
+        }
+    }
+    return winner;
 }
 
 //Remove children
