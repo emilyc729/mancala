@@ -32,6 +32,10 @@ function init() {
 }
 
 function render() {
+    var marbles = document.querySelectorAll('.marble');
+    marbles.forEach(function(marble) {
+        marble.remove();
+    });
     
     console.log(board);
     //console.log(board[0]);
@@ -51,8 +55,6 @@ function render() {
             marble.classList.add('marble');
             div.appendChild(marble);
         }
-
-        
         
        
         
@@ -79,7 +81,7 @@ function slotClick(evt) {
     }
    // console.log(slotId);
 
-    if (slotId === 6 || slotId === 13 || board[slotId] === 0) return;
+    if (slotId === potA || slotId === 13 || board[slotId] === 0) return;
     if(!sameSide(turn, slotId)) return alert('wrong side, choose again!');
 
     let numMarbles = board[slotId];
@@ -91,42 +93,50 @@ function slotClick(evt) {
             'nextPos' + ' ' + nextPos + '\n' 
             
         );
+        
 
         //console.log('turn =' + turn);
         
         if((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1));
         if(nextPos === 13) {
-            board[nextPos] += 1;
+            
             nextPos = 0;
+            board[nextPos] += 1;
     
         }
-        //console.log(nextPos);
+        console.log(nextPos);
         board[nextPos] += 1;
         board[curPos] -= 1;
        
         
        // console.log('pos' + nextPos);
         
-        
        numMarbles--;
-        console.log('numMarbles' + ' ' + numMarbles);
+       
       //  console.log('m' + board[nextPos]);
       //  console.log('marbles', numMarbles);
-        
+      
         if(numMarbles === 0) {
+            console.log('numMarbles' + ' ' + numMarbles);
             let lastPos = nextPos;
             turn = checkLastMarblePos(turn, lastPos);
-            console.log(lastPos);
+            console.log('lastPos' + ' ' + lastPos);
+            
         }
+        //numMarbles--;
+        
         nextPos++;
+        
     }
     
     winner = isWinner();
     console.log(turn);
-    
+
+
     render();
     
-
+    
+        
     
 
 }
@@ -180,12 +190,20 @@ function isWinner() {
 //Remove children
 //document.querySelector('.marble').remove();
 
+
+
+//console.log(removeMarbles);
+//var fc = removeMarbles.firstChild;
+
+
 /*
-var removeMarbles = document.querySelector('.slot');
-var fc = removeMarbles.firstChild;
+
 while(fc) {
-    console.log(removeMarbles);
+    //console.log(removeMarbles);
     removeMarbles.removeChild(fc);
     fc = removeMarbles.firstChild;
+    console.log(fc);
 }
 */
+
+
