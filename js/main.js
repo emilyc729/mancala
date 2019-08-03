@@ -53,6 +53,7 @@ function render() {
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
+            
             div.appendChild(marble);
         }
         
@@ -86,26 +87,31 @@ function slotClick(evt) {
 
     let numMarbles = board[slotId];
     let curPos = slotId;
-    let nextPos = curPos + 1;
+    let nextPos = curPos;
     for(let i = numMarbles; i > 0; i--) {
+
+        if((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1));
+
+        if(nextPos === 13) {
+            nextPos = 0;
+            board[nextPos] += 1;
+        } else {
+            nextPos++;
+            board[nextPos] += 1;
+        }
         console.log(
             'curPos' + ' ' + curPos + '\n' +
             'nextPos' + ' ' + nextPos + '\n' 
             
         );
         
-
+        
         //console.log('turn =' + turn);
         
-        if((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1));
-        if(nextPos === 13) {
-            
-            nextPos = 0;
-            board[nextPos] += 1;
-    
-        }
+        
         console.log(nextPos);
-        board[nextPos] += 1;
+        //board[nextPos] += 1;
+        
         board[curPos] -= 1;
        
         
@@ -121,14 +127,15 @@ function slotClick(evt) {
             let lastPos = nextPos;
             turn = checkLastMarblePos(turn, lastPos);
             console.log('lastPos' + ' ' + lastPos);
+            //need to check lastPos's prev. value
             
         }
         //numMarbles--;
         
-        nextPos++;
-        
+        //nextPos++;
+        console.log('hi ' + i);
     }
-    
+    console.log('ME ' + nextPos);
     winner = isWinner();
     console.log(turn);
 
@@ -142,14 +149,22 @@ function slotClick(evt) {
 }
 
 function checkLastMarblePos(turn, lastPos) {
+    console.log("-----------------------");
+    console.log('check turn ' + turn);
+    console.log('me marbles ' + (board[lastPos] - 1));
+    console.log(sameSide(turn, lastPos));
+    console.log("-----------------------");
     if((turn === 1 && lastPos === 6) || (turn === -1 && lastPos === 13)) {
         return turn;
-    } else if(sameSide(turn, lastPos) && board[lastPos] === 0) {
+    } else if(sameSide(turn, lastPos) && ((board[lastPos] - 1) === 0)) {
         if(turn === 1) {
+            console.log(turn);
             board[6] += board[13-(lastPos + 1)];
+            board[13-(lastPos + 1)] = 0;
             return turn *= -1;
         } else {
             board[13] += board[13-(lastPos + 1)];
+            board[13-(lastPos + 1)] = 0;
             return turn *= -1;
         }
     } else {
@@ -174,36 +189,31 @@ function isWinner() {
     let arrB = board.slice(7, 13);
     let sumA = arrA.reduce((a,b) => a + b, 0);
     let sumB = arrB.reduce((a,b) => a + b, 0);
-  
+    let totalA = board[6];
+    let totalB = board[13];
+    console.log(typeof sumA);
     if(sumA === 0 || sumB === 0) {
-        board[6] += sumA;
-        board[13] += sumB;
-        if(board[6] > board[13]) {
+        console.log('..................');
+        console.log(sumA);
+        console.log(sumB);
+        console.log('...................');
+        totalA += sumA;
+        totalB = board[13] + sumB;
+        
+        console.log('===================');
+        console.log(totalA);
+        console.log(totalB);
+        console.log('===================');
+        if(totalA > totalB) {
             winner = 1;
         } else {
             winner = -1;
         }
     }
+
+    
     return winner;
 }
 
-//Remove children
-//document.querySelector('.marble').remove();
 
-
-
-//console.log(removeMarbles);
-//var fc = removeMarbles.firstChild;
-
-
-/*
-
-while(fc) {
-    //console.log(removeMarbles);
-    removeMarbles.removeChild(fc);
-    fc = removeMarbles.firstChild;
-    console.log(fc);
-}
-*/
-
-
+//border: 38%
