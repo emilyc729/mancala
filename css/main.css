@@ -28,12 +28,29 @@ section.board {
     box-shadow: 1px 1px 20px rgba(0,0,0,0.8);
 }
 
+.marbleCount {
+    padding: 10px;
+    grid-area: count;
+    grid-column: 1 / span 14;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+span {
+    align-items: center;
+	border: solid 1px black;
+}
+
+
 .slot {
 
     border-style: groove;
     border-radius: 50%;
     border: 2px solid rgba(214, 181, 120, 0.822);
-    padding: 15px;
+    padding: 0;
     margin: 10px;
     display: inline-block;
     background: radial-gradient(transparent 50%, rgb(77, 77, 77), black);
@@ -42,13 +59,6 @@ section.board {
     position: relative;
     
  
-}
-
-
-.span {
-    position: absolute;
-	bottom: 0px;
-	border: solid 1px black;
 }
 
 #msg {
@@ -77,9 +87,8 @@ button {
 
 #slot6, #slot13 {
     grid-row: span 2;
-    padding: 0 20px;
-    border-radius: 4vmin;
-    padding: 15px;
+    padding: 0;
+    border-radius: 5vmin;
     background: radial-gradient(transparent 35%, #000) 70% calc(40% + 2em);
     background: radial-gradient(transparent 35%, rgb(31, 31, 31)) 80% calc(80% + 2.1em);
     background: none;

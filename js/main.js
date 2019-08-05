@@ -43,7 +43,8 @@ function render() {
         let slot = document.getElementById(`slot${slotIdx}`);
         let slotHeight = document.querySelector('.slot').scrollHeight;
         let slotWidth = document.querySelector('.slot').scrollWidth;
-
+        
+        slot.innerText = slotVal;
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
@@ -76,6 +77,7 @@ function render() {
 
 
     });
+    
 
     highlightSide();
 
@@ -92,7 +94,7 @@ function slotClick(evt) {
     }
 
     if (slotId === potA || slotId === potB || board[slotId] === 0) return;
-    if (!sameSide(turn, slotId)) return alert('wrong side, choose again!');
+    if (!sameSide(turn, slotId)) return alert('wrong side, select again!');
 
     let numMarbles = board[slotId];
     let curPos = slotId;
