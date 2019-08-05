@@ -10,7 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 500px;
-    
+    background-color: lightgrey;
 }
 
 section.board {
@@ -22,10 +22,10 @@ section.board {
         "pot2 slot0 slot1 slot2 slot3 slot4 slot5 pot1";
     
     background-color: rgb(206, 171, 125);
-    border-radius: 2vmin;
+    border-radius: 5vmin;
     padding: 15px;
     margin: 5vmin;
-    box-shadow: 3px 1px 15px rgba(0,0,0,0.8);
+    box-shadow: 1px 1px 15px rgba(0,0,0,0.8);
 }
 
 .slot {
@@ -39,20 +39,30 @@ section.board {
     background: radial-gradient(transparent 50%, rgb(77, 77, 77), black);
     background: radial-gradient(transparent 35%, rgb(59, 59, 59)) 80% calc(80% + 2.1em);
     background-size: 300% 300%;
+    position: relative;
     
  
- 
-    
 }
+
+.slot:hover {
+    border: 2px solid grey;
+}
+
+.span {
+    position: absolute;
+	bottom: 0px;
+	border: solid 1px black;
+}
+
 
 .marble {
     border-radius: 50%;
     border: 1px solid grey;
-    height: 10px;
-    width: 10px;
+    height: 12px;
+    width: 12px;
     display: inline-block;
     margin: 2px;
-    
+    background-color: black;
 }
 
 button {
@@ -72,6 +82,10 @@ button {
     background: radial-gradient(transparent 35%, rgb(31, 31, 31)) 80% calc(80% + 2.1em);
     background: none;
     background-size: 400% 300%;
+}
+
+#slot6, #slot13 {
+    pointer-events: none;
 }
 
 #slot0 {

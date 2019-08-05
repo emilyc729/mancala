@@ -1,7 +1,8 @@
 /*----- constants -----*/
-const COLORS = {
+const PLAYER = {
     '1': ['Player A', 'blue'], // (player 1)
-    '-1': ['Player B',  'red'] // (player 2)
+    '-1': ['Player B',  'red'], // (player 2)
+    '0': ['Tie']
 };
 
 const potA = 6;
@@ -17,6 +18,7 @@ let msgEl = document.getElementById('msg');
 /*----- event listeners -----*/
 document.querySelector('section.board')
     .addEventListener('click', slotClick);
+
 document.getElementById('reset')
     .addEventListener('click', init);
 /*----- functions ------*/
@@ -36,10 +38,10 @@ function render() {
     marbles.forEach(function(marble) {
         marble.remove();
     });
+
+   
     
     console.log(board);
-    //console.log(board[0]);
-    
 
     board.forEach(function (slotVal, slotIdx) {
         
@@ -48,26 +50,32 @@ function render() {
 
         
         //console.log(slotVal);
-        let div = document.getElementById(`slot${slotIdx}`);
+        let slot = document.getElementById(`slot${slotIdx}`);
 
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
             
-            div.appendChild(marble);
+            slot.appendChild(marble);
+          
         }
-        
-       
         
 
         if (winner === null) {
-            msgEl.textContent = `${COLORS[turn][0]}'s turn`;
+            msgEl.textContent = `${PLAYER[turn][0]}'s turn`;
+            msgEl.style.color = PLAYER[turn][1];
+        } else if(winner === 0) {
+            msgEl.textContent = `${PLAYER[turn]}, play again!`;
         } else {
-            msgEl.textContent = `${COLORS[winner][0]}'s Won!`;
+            msgEl.textContent = `${PLAYER[winner][0]}'s Won!`;
+            msgEl.style.color = PLAYER[turn][1];
         }
 
 
     });
+    
+    highlightSide();
+    
 }
 
 function slotClick(evt) {
@@ -88,9 +96,9 @@ function slotClick(evt) {
     let numMarbles = board[slotId];
     let curPos = slotId;
     let nextPos = curPos;
-    for(let i = numMarbles; i > 0; i--) {
+    while(numMarbles > 0) {
 
-        if((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1));
+        if((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1)) return;
 
         if(nextPos === 13) {
             nextPos = 0;
@@ -105,46 +113,20 @@ function slotClick(evt) {
             
         );
         
-        
-        //console.log('turn =' + turn);
-        
-        
-        console.log(nextPos);
-        //board[nextPos] += 1;
-        
         board[curPos] -= 1;
-       
         
-       // console.log('pos' + nextPos);
-        
-       numMarbles--;
-       
-      //  console.log('m' + board[nextPos]);
-      //  console.log('marbles', numMarbles);
+        numMarbles--;
       
         if(numMarbles === 0) {
             console.log('numMarbles' + ' ' + numMarbles);
             let lastPos = nextPos;
             turn = checkLastMarblePos(turn, lastPos);
             console.log('lastPos' + ' ' + lastPos);
-            //need to check lastPos's prev. value
-            
         }
-        //numMarbles--;
-        
-        //nextPos++;
-        console.log('hi ' + i);
     }
-    console.log('ME ' + nextPos);
     winner = isWinner();
-    console.log(turn);
-
 
     render();
-    
-    
-        
-    
 
 }
 
@@ -185,12 +167,12 @@ function sameSide(turn, position) {
 }
 
 function isWinner() {
-    let arrA = board.slice(0, 6);
-    let arrB = board.slice(7, 13);
+    let arrA = board.slice(0, potA);
+    let arrB = board.slice(7, potb);
     let sumA = arrA.reduce((a,b) => a + b, 0);
     let sumB = arrB.reduce((a,b) => a + b, 0);
-    let totalA = board[6];
-    let totalB = board[13];
+    let totalA = board[potA];
+    let totalB = board[potB];
     console.log(typeof sumA);
     if(sumA === 0 || sumB === 0) {
         console.log('..................');
@@ -198,7 +180,7 @@ function isWinner() {
         console.log(sumB);
         console.log('...................');
         totalA += sumA;
-        totalB = board[13] + sumB;
+        totalB += sumB;
         
         console.log('===================');
         console.log(totalA);
@@ -206,8 +188,10 @@ function isWinner() {
         console.log('===================');
         if(totalA > totalB) {
             winner = 1;
-        } else {
+        } else if(totalB > totalA){
             winner = -1;
+        } else {
+            winner = 0;
         }
     }
 
@@ -215,5 +199,32 @@ function isWinner() {
     return winner;
 }
 
+function highlightSide() {
+    if(turn === 1) {
+        for(let i = 0; i < potA; i++) {
+            document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn][1];
+        }
+        for(let i = 7; i < potB; i++) {
+            document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
+        }
+    } else {
+        for(let i = 0; i < potA; i++) { 
+            document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
+        }
+        for(let i = 7; i < potB; i++) {
+            
+            document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn][1];
+        }
+    }
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
 
 //border: 38%
