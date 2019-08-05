@@ -28,22 +28,6 @@ section.board {
     box-shadow: 1px 1px 20px rgba(0,0,0,0.8);
 }
 
-.marbleCount {
-    padding: 10px;
-    grid-area: count;
-    grid-column: 1 / span 14;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-
-span {
-    align-items: center;
-	border: solid 1px black;
-}
-
 
 .slot {
 
@@ -61,6 +45,12 @@ span {
  
 }
 
+
+
+.contains {
+    height: 100px;
+    width: 100px;
+}
 #msg {
     text-shadow: 0 0 20px rgb(0, 0, 0);
 }

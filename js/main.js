@@ -43,7 +43,7 @@ function render() {
         let slot = document.getElementById(`slot${slotIdx}`);
         let slotHeight = document.querySelector('.slot').scrollHeight;
         let slotWidth = document.querySelector('.slot').scrollWidth;
-        
+        //let contains = document.querySelector('.contain');
         slot.innerText = slotVal;
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
@@ -53,13 +53,13 @@ function render() {
         }
 
         $('.marble').each(function (i) {
-            let marbleLeft = Math.random() * (slotWidth - 20);
-            let marbleTop = Math.random() * (slotHeight - 20);
+            let marbleLeft = Math.random() * ((slotWidth * 0.5) - (this.offsetWidth * 0.5));
+            let marbleTop = Math.random() * ((slotHeight * 0.5) - (this.offsetHeight * 0.5));
             // console.log(marbleLeft);
             //console.log(this);
             $(this).css({
-                left: marbleLeft,
-                top: marbleTop
+                left: marbleLeft + this.offsetWidth * 0.5,
+                top: marbleTop + this.offsetHeight * 0.5
             });
 
         });
