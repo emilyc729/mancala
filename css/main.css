@@ -10,7 +10,18 @@ body {
     justify-content: center;
     align-items: center;
     width: 500px;
-    background-color: lightgrey;
+    background-color: rgb(194, 192, 192);
+    font-family: 'Dosis', 'Helvetica',sans-serif;
+}
+
+h1 {
+    font-size: 56px;
+    letter-spacing: 10px;
+}
+
+#msg {
+    font-size: 32px;
+    text-shadow: 1px 1px 6px black;
 }
 
 section.board {
@@ -26,6 +37,7 @@ section.board {
     padding: 15px;
     margin: 5vmin;
     box-shadow: 1px 1px 20px rgba(0,0,0,0.8);
+   
 }
 
 
@@ -41,13 +53,14 @@ section.board {
     background: radial-gradient(transparent 35%, rgb(59, 59, 59)) 80% calc(80% + 2.1em);
     background-size: 300% 300%;
     position: relative;
-    
- 
 }
 
-#msg {
-    text-shadow: 0 0 20px rgb(29, 29, 29);
+.disabled {
+    border: 2px solid rgba(214, 181, 120, 0.822) !important;
+}
 
+.value {
+    font-size: 20px;
 }
 
 .marble {
@@ -57,31 +70,29 @@ section.board {
     width: 20px;
     display: block;
     margin: 0;
-
 }
 
 button {
+    text-decoration: none;
     margin-top: 20px;
     font-size: 32px;
     border: 2px solid salmon;
     border-radius: 2px;
     color: salmon;
-    background-color: lightgrey;
-    text-decoration: none;
-    
+    background-color: rgb(194, 192, 192);
 }
 
 button:hover {
-   
+    border: 2px solid rgb(250, 160, 150);
+    color: rgb(250, 160, 150);
+    text-decoration: none;
 }
 
 #slot6, #slot13 {
     grid-row: span 2;
     padding: 0;
     border-radius: 5vmin;
-    background: radial-gradient(transparent 35%, #000) 70% calc(40% + 2em);
     background: radial-gradient(transparent 35%, rgb(31, 31, 31)) 80% calc(80% + 2.1em);
-    background: none;
     background-size: 400% 300%;
 }
 

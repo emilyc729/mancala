@@ -1,8 +1,19 @@
 /*----- constants -----*/
 const PLAYER = {
-    '1': ['Player A', 'lightblue'], // (player A)
-    '-1': ['Player B', 'pink'], // (player B)
-    '0': ['Tie']
+    '1': {
+        name:'Player A',
+        color: 'lightblue',
+        pot: 6
+    }, // (player A)
+    '-1': {
+        name: 'Player B',
+        color: 'pink',
+        pot: 13
+    },  // (player B)
+    '0': {
+        name: 'Tie',
+        color: 'lightyellow'
+    }
 };
 
 const potA = 6;
@@ -37,13 +48,11 @@ function render() {
     clearMarbles();
 
     console.log(board);
-
     board.forEach(function (slotVal, slotIdx) {
-
+        
         let slot = document.getElementById(`slot${slotIdx}`);
-        let slotHeight = document.querySelector('.slot').scrollHeight;
-        let slotWidth = document.querySelector('.slot').scrollWidth;
-        slot.innerHTML = `<span>${slotVal}</span>`;
+        slot.innerHTML = `<span class="value">${slotVal}</span>`;
+
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
@@ -51,43 +60,30 @@ function render() {
             slot.appendChild(marble);
         }
 
-        $('.marble').each(function (i) {
-            let marbleLeft = Math.random() * ((slotWidth * 0.5) - (this.offsetWidth * 0.5));
-            let marbleTop = Math.random() * ((slotHeight * 0.5) - (this.offsetHeight * 0.5));
-            if(this.parentNode.id === 'slot6' || this.parentNode.id === 'slot13') {
-                let potHeight = document.getElementById('slot6').scrollHeight;
-                let potWidth = document.getElementById('slot6').scrollWidth;
-                let marblePotLeft = Math.random() * ((potWidth * 0.5)- (this.offsetWidth * 0.5));
-                let marblePotTop = Math.random() * ((potHeight * 0.57) - (this.offsetHeight * 0.5));
-                $(this).css({
-                    left: marblePotLeft + this.offsetWidth * 0.5,
-                    top: marblePotTop + this.offsetHeight * 0.5
-                });
-            } else {
-                console.log(i + ' bye');
-                $(this).css({
-                    left: marbleLeft + this.offsetWidth * 0.5,
-                    top: marbleTop + this.offsetHeight * 0.5
-                });
-            }
-        
-        });
-        
+        setMarbleBoundaries();
 
         if (winner === null) {
-            msgEl.textContent = `${PLAYER[turn][0]}'s turn`;
-            msgEl.style.color = PLAYER[turn][1];
+            msgEl.textContent = `${PLAYER[turn].name}'s turn`;
+            msgEl.style.color = PLAYER[turn].color;
         } else if (winner === 0) {
-            msgEl.textContent = `${PLAYER[turn]}, play again!`;
+            msgEl.textContent = `${PLAYER[winner].name}, play again!`;
+            msgEl.style.color = PLAYER[winner].color;
         } else {
-            //
-            msgEl.textContent = `${PLAYER[winner][0]}'s Won!`;
-            msgEl.style.color = PLAYER[turn][1];
+            document.getElementById(`slot${PLAYER[winner].pot}`).style.border = `3px solid ${PLAYER[winner].color}`;
+            msgEl.textContent = `${PLAYER[winner].name} Won!`;
+            msgEl.style.color = PLAYER[winner].color;
         }
 
+        if(slotVal === 0) {
+            slot.classList.add('disabled');
+        } else {
+            slot.classList.remove('disabled');
+        }
+
+        
 
     });
-    
+
 
     highlightSide();
 
@@ -104,7 +100,7 @@ function slotClick(evt) {
     }
 
     if (slotId === potA || slotId === potB || board[slotId] === 0) return;
-    if (!sameSide(turn, slotId)) return alert('wrong side, select again!');
+    if (!sameSide(turn, slotId)) return;
 
     let numMarbles = board[slotId];
     let curPos = slotId;
@@ -138,6 +134,15 @@ function slotClick(evt) {
     }
 
     winner = isWinner();
+    
+    //clear slots except pots when winner found
+    if(winner != null) {
+        for (let i = 0; i < potB; i++) {
+            if(i !== potA) {
+                board[i] = 0;
+            }
+        }
+    }
     render();
 
 }
@@ -167,7 +172,7 @@ function checkLastMarblePos(turn, lastPos) {
 }
 
 function sameSide(turn, position) {
-    if ((turn === 1 && (position >= 0 && position < potA))
+    if ((turn === 1 && (position >= 0 && position <= potA))
         || (turn === -1 && (position >= 7 && position < potB))) {
         return true;
 
@@ -180,24 +185,23 @@ function isWinner() {
     let arrB = board.slice(7, potB);
     let sumA = arrA.reduce((a, b) => a + b, 0);
     let sumB = arrB.reduce((a, b) => a + b, 0);
-    let totalA = board[potA];
-    let totalB = board[potB];
+
     console.log(typeof sumA);
     if (sumA === 0 || sumB === 0) {
         console.log('..................');
         console.log(sumA);
         console.log(sumB);
         console.log('...................');
-        totalA += sumA;
-        totalB += sumB;
+        board[potA] += sumA;
+        board[potB] += sumB;
 
         console.log('===================');
-        console.log(totalA);
-        console.log(totalB);
+        console.log(board[potA]);
+        console.log(board[potB]);
         console.log('===================');
-        if (totalA > totalB) {
+        if (board[potA] > board[potB]) {
             winner = 1;
-        } else if (totalB > totalA) {
+        } else if (board[potA] < board[potB]) {
             winner = -1;
         } else {
             winner = 0;
@@ -207,20 +211,19 @@ function isWinner() {
 }
 
 function highlightSide() {
-    if (turn === 1) {
+    if (turn === 1) { 
         for (let i = 0; i < potA; i++) {
-            document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn][1];
+            document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn].color;
         }
         for (let i = 7; i < potB; i++) {
             document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
         }
-    } else {
+    } else { 
         for (let i = 0; i < potA; i++) {
             document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
         }
         for (let i = 7; i < potB; i++) {
-
-            document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn][1];
+            document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn].color;
         }
     }
 }
@@ -238,4 +241,28 @@ function clearMarbles() {
         marble.remove();
     });
 }
-//border: 38%
+
+function setMarbleBoundaries() {
+    $('.marble').each(function (i) {
+        let slotHeight = document.querySelector('.slot').scrollHeight;
+        let slotWidth = document.querySelector('.slot').scrollWidth;
+        let marbleLeft = Math.random() * ((slotWidth * 0.5) - (this.offsetWidth * 0.5));
+        let marbleTop = Math.random() * ((slotHeight * 0.5) - (this.offsetHeight * 0.5));
+        if (this.parentNode.id === 'slot6' || this.parentNode.id === 'slot13') {
+            let potHeight = document.getElementById('slot6').scrollHeight;
+            let potWidth = document.getElementById('slot6').scrollWidth;
+            let marblePotLeft = Math.random() * ((potWidth * 0.5) - (this.offsetWidth * 0.5));
+            let marblePotTop = Math.random() * ((potHeight * 0.5) - (this.offsetHeight * 0.5));
+            $(this).css({
+                left: marblePotLeft + this.offsetWidth * 0.5,
+                top: marblePotTop + this.offsetHeight
+            });
+        } else {
+            $(this).css({
+                left: marbleLeft + this.offsetWidth * 0.5,
+                top: marbleTop + this.offsetHeight * 0.5
+            });
+        }
+
+    });
+}
