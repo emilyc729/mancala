@@ -104,33 +104,48 @@ function slotClick(evt) {
 
     let numMarbles = board[slotId];
     let curPos = slotId;
-    let nextPos = curPos;
+    let nextPos = curPos + 1;
     while (numMarbles > 0) {
-
-        if ((nextPos === 13 && turn != -1) || (nextPos === 6 && turn != 1)) return;
-
-        if (nextPos === 13) {
-            nextPos = 0;
-            board[nextPos] += 1;
-        } else {
-            nextPos++;
-            board[nextPos] += 1;
-        }
         console.log(
             'curPos' + ' ' + curPos + '\n' +
-            'nextPos' + ' ' + nextPos + '\n'
-
+            'nextPos' + ' ' + nextPos + '\n' +
+            'turn' + ' ' + turn + '\n' +
+            'marbles ' + numMarbles + '\n'
         );
 
-        board[curPos] -= 1;
-        numMarbles--;
+        if(!((nextPos === 13 && turn === 1) || (nextPos === 6 && turn === -1))) {
+            console.log('hi');
+            board[nextPos] += 1;
 
+            if (nextPos === 13) {
+                nextPos = 0;
+            } else {
+                nextPos++;   
+            }
+            board[curPos] -= 1;
+        } else {
+            nextPos++;
+            continue;
+        }
+        
+        
+        
+
+        numMarbles--;
+        
+        console.log('lastPOSITION ' + nextPos);
+        let lastPos = nextPos;
         if (numMarbles === 0) {
+            if(lastPos === 0) {
+                lastPos = 13;
+            } else {
+                lastPos -= 1;
+            }
             console.log('numMarbles' + ' ' + numMarbles);
-            let lastPos = nextPos;
             turn = checkLastMarblePos(turn, lastPos);
             console.log('lastPos' + ' ' + lastPos);
         }
+
     }
 
     winner = isWinner();

@@ -22,6 +22,7 @@ h1 {
 #msg {
     font-size: 32px;
     text-shadow: 1px 1px 6px black;
+    letter-spacing: 2px;
 }
 
 section.board {
@@ -74,18 +75,20 @@ section.board {
 
 button {
     text-decoration: none;
-    margin-top: 20px;
+    margin-top: 15px;
     font-size: 32px;
     border: 2px solid salmon;
-    border-radius: 2px;
+    border-radius: 3px;
     color: salmon;
     background-color: rgb(194, 192, 192);
+    font-family: 'Dosis', 'Helvetica',sans-serif;
+   
+    letter-spacing: 2px;
 }
 
 button:hover {
     border: 2px solid rgb(250, 160, 150);
     color: rgb(250, 160, 150);
-    text-decoration: none;
 }
 
 #slot6, #slot13 {
