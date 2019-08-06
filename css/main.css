@@ -1,7 +1,7 @@
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
-
 body {
     height: 100vh;
     margin: 0 auto;
@@ -45,25 +45,19 @@ section.board {
  
 }
 
-
-
-.contains {
-    height: 100px;
-    width: 100px;
-}
 #msg {
-    text-shadow: 0 0 20px rgb(0, 0, 0);
+    text-shadow: 0 0 20px rgb(29, 29, 29);
+
 }
 
 .marble {
-    position: absolute;
+    position: absolute;  
     border-radius: 50%;
-    border: 1px solid grey;
     height: 20px;
     width: 20px;
-    display: inline-block;
-    margin: 2px;
-    background-color: black;
+    display: block;
+    margin: 0;
+
 }
 
 button {
@@ -73,6 +67,12 @@ button {
     border-radius: 2px;
     color: salmon;
     background-color: lightgrey;
+    text-decoration: none;
+    
+}
+
+button:hover {
+   
 }
 
 #slot6, #slot13 {
@@ -83,10 +83,6 @@ button {
     background: radial-gradient(transparent 35%, rgb(31, 31, 31)) 80% calc(80% + 2.1em);
     background: none;
     background-size: 400% 300%;
-}
-
-#slot6, #slot13 {
-    pointer-events: none;
 }
 
 #slot0 {
@@ -131,3 +127,5 @@ button {
 #slot13 {
     grid-area: pot2;
 }
+
+

@@ -43,26 +43,36 @@ function render() {
         let slot = document.getElementById(`slot${slotIdx}`);
         let slotHeight = document.querySelector('.slot').scrollHeight;
         let slotWidth = document.querySelector('.slot').scrollWidth;
-        //let contains = document.querySelector('.contain');
-        slot.innerText = slotVal;
+        slot.innerHTML = `<span>${slotVal}</span>`;
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
-            marble.style.backgroundColor = getRandomColor();
+            marble.style.background = `radial-gradient(circle at 6px 6px, ${getRandomColor()}, #292929)`;
             slot.appendChild(marble);
         }
 
         $('.marble').each(function (i) {
             let marbleLeft = Math.random() * ((slotWidth * 0.5) - (this.offsetWidth * 0.5));
             let marbleTop = Math.random() * ((slotHeight * 0.5) - (this.offsetHeight * 0.5));
-            // console.log(marbleLeft);
-            //console.log(this);
-            $(this).css({
-                left: marbleLeft + this.offsetWidth * 0.5,
-                top: marbleTop + this.offsetHeight * 0.5
-            });
-
+            if(this.parentNode.id === 'slot6' || this.parentNode.id === 'slot13') {
+                let potHeight = document.getElementById('slot6').scrollHeight;
+                let potWidth = document.getElementById('slot6').scrollWidth;
+                let marblePotLeft = Math.random() * ((potWidth * 0.5)- (this.offsetWidth * 0.5));
+                let marblePotTop = Math.random() * ((potHeight * 0.57) - (this.offsetHeight * 0.5));
+                $(this).css({
+                    left: marblePotLeft + this.offsetWidth * 0.5,
+                    top: marblePotTop + this.offsetHeight * 0.5
+                });
+            } else {
+                console.log(i + ' bye');
+                $(this).css({
+                    left: marbleLeft + this.offsetWidth * 0.5,
+                    top: marbleTop + this.offsetHeight * 0.5
+                });
+            }
+        
         });
+        
 
         if (winner === null) {
             msgEl.textContent = `${PLAYER[turn][0]}'s turn`;
