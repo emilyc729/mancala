@@ -1,7 +1,7 @@
 /*----- constants -----*/
 const PLAYER = {
     '1': {
-        name:'Player A',
+        name: 'Player A',
         color: 'lightblue',
         pot: 6
     }, // (player A)
@@ -13,7 +13,7 @@ const PLAYER = {
     '0': {
         name: 'Tie',
         color: 'lightyellow'
-    }
+    } // (Tie)
 };
 
 const potA = 6;
@@ -49,7 +49,7 @@ function render() {
 
     console.log(board);
     board.forEach(function (slotVal, slotIdx) {
-        
+
         let slot = document.getElementById(`slot${slotIdx}`);
         slot.innerHTML = `<span class="value">${slotVal}</span>`;
 
@@ -74,16 +74,13 @@ function render() {
             msgEl.style.color = PLAYER[winner].color;
         }
 
-        if(slotVal === 0) {
+        //show possible selections during turn
+        if (slotVal === 0) {
             slot.classList.add('disabled');
         } else {
             slot.classList.remove('disabled');
         }
-
-        
-
     });
-
 
     highlightSide();
 
@@ -110,33 +107,78 @@ function slotClick(evt) {
             'curPos' + ' ' + curPos + '\n' +
             'nextPos' + ' ' + nextPos + '\n' +
             'turn' + ' ' + turn + '\n' +
-            'marbles ' + numMarbles + '\n'
+            'marbles ' + numMarbles + '\n' +
+            'slotMarbles ' + board[curPos] + '\n'
         );
-
-        if(!((nextPos === 13 && turn === 1) || (nextPos === 6 && turn === -1))) {
-            console.log('hi');
+        
+        if(turn === 1) {
+            if(nextPos === 13) {
+                nextPos = 0;
+            }
             board[nextPos] += 1;
+            nextPos++;
+            board[curPos] -= 1;
+            numMarbles--;
 
+        }
+
+        if(turn === -1) {
+            if(nextPos === 13) {
+                board[nextPos] += 1;
+                board[curPos]--;
+                numMarbles--;
+                nextPos = 0;
+            } else if(nextPos === 6) {
+                nextPos++;
+            } else {
+                board[nextPos] += 1;
+                nextPos++;
+                board[curPos] -= 1;
+                numMarbles--;
+            }
+            
+        }
+            
+        console.log(board[curPos]);
+        console.log(numMarbles);
+       /* 
+        if (((nextPos === 13 && turn === 1) || (nextPos === 6 && turn === -1))) {
             if (nextPos === 13) {
                 nextPos = 0;
+                numMarbles--;
             } else {
-                nextPos++;   
+                nextPos++;
             }
-            board[curPos] -= 1;
+        console.log('--------------------');  
+        console.log(
+            'curPos' + ' ' + curPos + '\n' +
+            'nextPos' + ' ' + nextPos + '\n' +
+            'turn' + ' ' + turn + '\n' +
+            'marbles ' + numMarbles + '\n',
+            'lastPOSITION ' + nextPos
+        );
+        console.log('--------------------');
+            
+        }
+      //[1, 1, 0, 0, 1, 12, 12, 0, 3, 2, 1, 1, 1, 13]
+      //[2, 2, 1, 1, 2, 0, 13, 1, 4, 3, 2, 2, 2, 13]
+        //2 3 9 10 4 11 3 12 1 10 2 11 4 12 8 3 5
+        
+        board[nextPos] += 1;
+
+        if (nextPos === 13) {
+            nextPos = 0;
         } else {
             nextPos++;
-            continue;
         }
-        
-        
-        
+        board[curPos] -= 1
 
         numMarbles--;
-        
+        */
         console.log('lastPOSITION ' + nextPos);
         let lastPos = nextPos;
         if (numMarbles === 0) {
-            if(lastPos === 0) {
+            if (lastPos === 0) {
                 lastPos = 13;
             } else {
                 lastPos -= 1;
@@ -149,11 +191,11 @@ function slotClick(evt) {
     }
 
     winner = isWinner();
-    
+
     //clear slots except pots when winner found
-    if(winner != null) {
+    if (winner != null) {
         for (let i = 0; i < potB; i++) {
-            if(i !== potA) {
+            if (i !== potA) {
                 board[i] = 0;
             }
         }
@@ -226,14 +268,14 @@ function isWinner() {
 }
 
 function highlightSide() {
-    if (turn === 1) { 
+    if (turn === 1) {
         for (let i = 0; i < potA; i++) {
             document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn].color;
         }
         for (let i = 7; i < potB; i++) {
             document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
         }
-    } else { 
+    } else {
         for (let i = 0; i < potA; i++) {
             document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
         }
@@ -281,3 +323,4 @@ function setMarbleBoundaries() {
 
     });
 }
+
