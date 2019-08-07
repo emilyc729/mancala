@@ -54,18 +54,18 @@ function render() {
         
         if(positionsArray.includes(slotIdx)) {
             time = showSteps();
-            
+           
         } else {
             slot.innerHTML = `<span class="value">${slotVal}</span>`;
         }
-        
+        //create marbles
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
             marble.style.background = `radial-gradient(circle at 6px 6px, ${getRandomColor()}, #292929)`;
             slot.appendChild(marble);
         }
-
+        //place marbles within circular slot
         setMarblePlacements();
         
         //show possible selections during turn
@@ -179,7 +179,6 @@ function slotClick(evt) {
         }
     }
 
-    
     render();
 
 }
@@ -318,15 +317,20 @@ function displayMessage() {
     }
 }
 
+//show each slot the marble went to & return the total time of function
 function showSteps() {
-    
-    let time = 1500;
+    let time = 1000;
     positionsArray.forEach(function(pos){
+        setTimeout(function(){
+            $(`#slot${pos} :not(:first-child)`).css('visibility', 'hidden');
+        });
+    
         setTimeout(function() {
             document.getElementById(`slot${pos}`).classList.add('steps');
             document.querySelector(`#slot${pos}`).firstChild.textContent = board[pos];
-            
+            $(`#slot${pos} :not(:first-child)`).css('visibility', 'visible');
         }, time);
+
         setTimeout(function(){
             document.getElementById(`slot${pos}`).classList.remove('steps');
         }, time + 1500);
