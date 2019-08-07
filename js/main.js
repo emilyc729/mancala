@@ -51,9 +51,10 @@ function render() {
     let time = 0;
     board.forEach(function (slotVal, slotIdx) {
         let slot = document.getElementById(`slot${slotIdx}`);
-        //slot.innerHTML = `<span class="value">${slotVal}</span>`;
+        
         if(positionsArray.includes(slotIdx)) {
             time = showSteps();
+            
         } else {
             slot.innerHTML = `<span class="value">${slotVal}</span>`;
         }
@@ -65,20 +66,8 @@ function render() {
             slot.appendChild(marble);
         }
 
-        setMarbleBoundaries();
-        //showSteps();
-        if (winner === null) {
-            msgEl.textContent = `${PLAYER[turn].name}'s turn`;
-            msgEl.style.color = PLAYER[turn].color;
-        } else if (winner === 0) {
-            msgEl.textContent = `${PLAYER[winner].name}, play again!`;
-            msgEl.style.color = PLAYER[winner].color;
-        } else {
-            document.getElementById(`slot${PLAYER[winner].pot}`).style.border = `3px solid ${PLAYER[winner].color}`;
-            msgEl.textContent = `${PLAYER[winner].name} Won!`;
-            msgEl.style.color = PLAYER[winner].color;
-        }
-
+        setMarblePlacements();
+        
         //show possible selections during turn
         if (slotVal === 0) {
             slot.classList.add('disabled');
@@ -86,9 +75,14 @@ function render() {
             slot.classList.remove('disabled');
         }
     });
+    //setMarblePlacements();
     //showSteps();
-    console.log(time);
-    //setTimeout(highlightSide, time);
+    setTimeout(function() {
+        displayMessage();
+        highlightSide();
+        
+    }, time);
+    
 
 }
 
@@ -285,7 +279,7 @@ function clearMarbles() {
     });
 }
 
-function setMarbleBoundaries() {
+function setMarblePlacements() {
     $('.marble').each(function (i) {
         let slotHeight = document.querySelector('.slot').scrollHeight;
         let slotWidth = document.querySelector('.slot').scrollWidth;
@@ -310,11 +304,24 @@ function setMarbleBoundaries() {
     });
 }
 
+function displayMessage() {
+    if (winner === null) {
+        msgEl.textContent = `${PLAYER[turn].name}'s turn`;
+        msgEl.style.color = PLAYER[turn].color;
+    } else if (winner === 0) {
+        msgEl.textContent = `${PLAYER[winner].name}, play again!`;
+        msgEl.style.color = PLAYER[winner].color;
+    } else {
+        document.getElementById(`slot${PLAYER[winner].pot}`).style.border = `3px solid ${PLAYER[winner].color}`;
+        msgEl.textContent = `${PLAYER[winner].name} Won!`;
+        msgEl.style.color = PLAYER[winner].color;
+    }
+}
+
 function showSteps() {
-    console.log(positionsArray);
-    let time = 2000;
+    
+    let time = 1500;
     positionsArray.forEach(function(pos){
-        console.log(pos);
         setTimeout(function() {
             document.getElementById(`slot${pos}`).classList.add('steps');
             document.querySelector(`#slot${pos}`).firstChild.textContent = board[pos];
@@ -322,10 +329,9 @@ function showSteps() {
         }, time);
         setTimeout(function(){
             document.getElementById(`slot${pos}`).classList.remove('steps');
-        }, time + 2000);
-        time += 2000;
+        }, time + 1500);
+        time += 1500;
     });
-    console.log(time);
     return time;
 }
 
