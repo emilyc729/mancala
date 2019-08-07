@@ -54,7 +54,6 @@ function render() {
         
         if(positionsArray.includes(slotIdx)) {
             time = showSteps();
-           
         } else {
             slot.innerHTML = `<span class="value">${slotVal}</span>`;
         }
@@ -75,15 +74,11 @@ function render() {
             slot.classList.remove('disabled');
         }
     });
-    //setMarblePlacements();
-    //showSteps();
+    //delay display of message and slot selections for next player
     setTimeout(function() {
         displayMessage();
         highlightSide();
-        
     }, time);
-    
-
 }
 
 function slotClick(evt) {
@@ -148,12 +143,8 @@ function slotClick(evt) {
             
         console.log(board[curPos]);
         console.log(numMarbles);
-
-      //[1, 1, 0, 0, 1, 12, 12, 0, 3, 2, 1, 1, 1, 13]
-      //[2, 2, 1, 1, 2, 0, 13, 1, 4, 3, 2, 2, 2, 13]
-        //2 3 9 10 4 11 3 12 1 10 2 11 4 12 8 3 5
- 
         console.log('lastPOSITION ' + nextPos);
+        //get last position of marble to determine turn
         let lastPos = nextPos;
         if (numMarbles === 0) {
             if (lastPos === 0) {
@@ -165,7 +156,6 @@ function slotClick(evt) {
             turn = checkLastMarblePos(turn, lastPos);
             console.log('lastPos' + ' ' + lastPos);
         }
-
     }
 
     winner = isWinner();
@@ -211,7 +201,6 @@ function sameSide(turn, position) {
     if ((turn === 1 && (position >= 0 && position <= potA))
         || (turn === -1 && (position >= 7 && position < potB))) {
         return true;
-
     }
     return false;
 }
@@ -333,9 +322,24 @@ function showSteps() {
 
         setTimeout(function(){
             document.getElementById(`slot${pos}`).classList.remove('steps');
-        }, time + 1500);
-        time += 1500;
+        }, time + 1000);
+        time += 1000;
     });
     return time;
 }
 
+var i = 0;
+var text = 'Mancala';
+var speed = 100;
+
+function titleEffect() {
+
+    
+    if(i < text.length) {
+        document.querySelector('h1').innerHTML += text.charAt(i);
+        i++;
+        setTimeout(titleEffect, speed);
+    }
+}
+
+titleEffect();
