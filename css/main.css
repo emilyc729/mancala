@@ -54,6 +54,7 @@ section.board {
     background: radial-gradient(transparent 35%, rgb(59, 59, 59)) 80% calc(80% + 2.1em);
     background-size: 300% 300%;
     position: relative;
+
 }
 
 .disabled {
@@ -142,4 +143,6 @@ button:hover {
     grid-area: pot2;
 }
 
-
+.steps {
+    box-shadow: 0 0 20px rgb(255, 255, 159);
+}

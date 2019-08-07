@@ -20,7 +20,7 @@ const potA = 6;
 const potB = 13;
 
 /*----- app's state (variables) -----*/
-let board, turn, winner;
+let board, turn, winner, positionsArray;
 
 
 /*----- cached element references -----*/
@@ -40,7 +40,7 @@ function init() {
     board = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
     turn = 1;
     winner = null;
-
+    positionsArray = [];
     render();
 }
 
@@ -48,11 +48,16 @@ function render() {
     clearMarbles();
 
     console.log(board);
+    let time = 0;
     board.forEach(function (slotVal, slotIdx) {
-
         let slot = document.getElementById(`slot${slotIdx}`);
-        slot.innerHTML = `<span class="value">${slotVal}</span>`;
-
+        //slot.innerHTML = `<span class="value">${slotVal}</span>`;
+        if(positionsArray.includes(slotIdx)) {
+            time = showSteps();
+        } else {
+            slot.innerHTML = `<span class="value">${slotVal}</span>`;
+        }
+        
         for (let i = 0; i < slotVal; i++) {
             let marble = document.createElement('div');
             marble.classList.add('marble');
@@ -61,7 +66,7 @@ function render() {
         }
 
         setMarbleBoundaries();
-
+        //showSteps();
         if (winner === null) {
             msgEl.textContent = `${PLAYER[turn].name}'s turn`;
             msgEl.style.color = PLAYER[turn].color;
@@ -81,13 +86,16 @@ function render() {
             slot.classList.remove('disabled');
         }
     });
-
-    highlightSide();
+    //showSteps();
+    console.log(time);
+    //setTimeout(highlightSide, time);
 
 }
 
 function slotClick(evt) {
     let slotId = 0;
+    
+    positionsArray = [];
 
     if (evt.target.className === 'marble') {
         slotId = parseInt(evt.target.parentNode.id.replace('slot', ''));
@@ -102,6 +110,7 @@ function slotClick(evt) {
     let numMarbles = board[slotId];
     let curPos = slotId;
     let nextPos = curPos + 1;
+    positionsArray = [];
     while (numMarbles > 0) {
         console.log(
             'curPos' + ' ' + curPos + '\n' +
@@ -116,6 +125,7 @@ function slotClick(evt) {
                 nextPos = 0;
             }
             board[nextPos] += 1;
+            positionsArray.push(nextPos);
             nextPos++;
             board[curPos] -= 1;
             numMarbles--;
@@ -124,14 +134,17 @@ function slotClick(evt) {
 
         if(turn === -1) {
             if(nextPos === 13) {
+                
                 board[nextPos] += 1;
-                board[curPos]--;
+                positionsArray.push(nextPos);
+                board[curPos] -= 1;
                 numMarbles--;
                 nextPos = 0;
             } else if(nextPos === 6) {
                 nextPos++;
             } else {
                 board[nextPos] += 1;
+                positionsArray.push(nextPos);
                 nextPos++;
                 board[curPos] -= 1;
                 numMarbles--;
@@ -141,40 +154,11 @@ function slotClick(evt) {
             
         console.log(board[curPos]);
         console.log(numMarbles);
-       /* 
-        if (((nextPos === 13 && turn === 1) || (nextPos === 6 && turn === -1))) {
-            if (nextPos === 13) {
-                nextPos = 0;
-                numMarbles--;
-            } else {
-                nextPos++;
-            }
-        console.log('--------------------');  
-        console.log(
-            'curPos' + ' ' + curPos + '\n' +
-            'nextPos' + ' ' + nextPos + '\n' +
-            'turn' + ' ' + turn + '\n' +
-            'marbles ' + numMarbles + '\n',
-            'lastPOSITION ' + nextPos
-        );
-        console.log('--------------------');
-            
-        }
+
       //[1, 1, 0, 0, 1, 12, 12, 0, 3, 2, 1, 1, 1, 13]
       //[2, 2, 1, 1, 2, 0, 13, 1, 4, 3, 2, 2, 2, 13]
         //2 3 9 10 4 11 3 12 1 10 2 11 4 12 8 3 5
-        
-        board[nextPos] += 1;
-
-        if (nextPos === 13) {
-            nextPos = 0;
-        } else {
-            nextPos++;
-        }
-        board[curPos] -= 1
-
-        numMarbles--;
-        */
+ 
         console.log('lastPOSITION ' + nextPos);
         let lastPos = nextPos;
         if (numMarbles === 0) {
@@ -200,6 +184,8 @@ function slotClick(evt) {
             }
         }
     }
+
+    
     render();
 
 }
@@ -322,5 +308,24 @@ function setMarbleBoundaries() {
         }
 
     });
+}
+
+function showSteps() {
+    console.log(positionsArray);
+    let time = 2000;
+    positionsArray.forEach(function(pos){
+        console.log(pos);
+        setTimeout(function() {
+            document.getElementById(`slot${pos}`).classList.add('steps');
+            document.querySelector(`#slot${pos}`).firstChild.textContent = board[pos];
+            
+        }, time);
+        setTimeout(function(){
+            document.getElementById(`slot${pos}`).classList.remove('steps');
+        }, time + 2000);
+        time += 2000;
+    });
+    console.log(time);
+    return time;
 }
 
