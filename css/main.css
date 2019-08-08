@@ -21,10 +21,7 @@ h1 {
     border-radius: 50%;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke-width: 3px;
-    -webkit-text-stroke-color: rgba(17, 0, 80, 0.747);
-    
-
-    
+    -webkit-text-stroke-color: rgba(17, 0, 80, 0.747);  
 }
 
 #msg {
@@ -47,12 +44,10 @@ section.board {
     padding: 15px;
     margin: 5vmin;
     box-shadow: 1px 1px 20px rgba(0,0,0,0.8);
-   
 }
 
 
 .slot {
-
     border-style: groove;
     border-radius: 50%;
     border: 2px solid rgba(214, 181, 120, 0.822);
@@ -63,7 +58,6 @@ section.board {
     background: radial-gradient(transparent 35%, rgb(59, 59, 59)) 80% calc(80% + 2.1em);
     background-size: 300% 300%;
     position: relative;
-
 }
 
 .disabled {
@@ -92,7 +86,6 @@ button {
     color: salmon;
     background-color: rgb(194, 192, 192);
     font-family: 'Dosis', 'Helvetica',sans-serif;
-   
     letter-spacing: 2px;
 }
 
@@ -168,6 +161,6 @@ button:hover {
     }
   }
   
-.box {
+.animate1 {
     animation: fontbulger 2s infinite;
 }
