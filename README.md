@@ -5,7 +5,7 @@ Mancala is one of my favorite childhood games! In this game you take turns tryin
 ![Player A](https://i.imgur.com/Wn7XVeN.png)
 ![Player B](https://i.imgur.com/iNz6VBL.png)
 ![Tie](https://i.imgur.com/CqKA1Pr.png)
-![Win](https://i.imgur.com/r53FGQF.png)
+![Win](https://i.imgur.com/JFnAUmu.png)
 
 ## Technologies Used
 1. HTML
