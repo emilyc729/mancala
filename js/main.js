@@ -46,6 +46,7 @@ function init() {
 
 function render() {
     clearMarbles();
+    document.getElementById('msg').classList.remove('box');
 
     console.log(board);
     let time = 0;
@@ -73,12 +74,22 @@ function render() {
         } else {
             slot.classList.remove('disabled');
         }
+        
+     
     });
     //delay display of message and slot selections for next player
     setTimeout(function() {
         displayMessage();
         highlightSide();
+        
     }, time);
+
+    setTimeout(function() {
+        if(winner === 1 || winner === -1){
+            document.getElementById('msg').classList.add('box');
+        }
+    }, time + 500);
+    
 }
 
 function slotClick(evt) {
@@ -122,14 +133,14 @@ function slotClick(evt) {
         }
 
         if(turn === -1) {
-            if(nextPos === 13) {
+            if(nextPos === potB) {
                 
                 board[nextPos] += 1;
                 positionsArray.push(nextPos);
                 board[curPos] -= 1;
                 numMarbles--;
                 nextPos = 0;
-            } else if(nextPos === 6) {
+            } else if(nextPos === potA) {
                 nextPos++;
             } else {
                 board[nextPos] += 1;
@@ -160,7 +171,7 @@ function slotClick(evt) {
 
     winner = isWinner();
 
-    //clear slots except pots when winner found
+    //clear slots except players' pots when winner found
     if (winner != null) {
         for (let i = 0; i < potB; i++) {
             if (i !== potA) {
@@ -173,15 +184,19 @@ function slotClick(evt) {
 
 }
 
+//check last marble's position to determine turn
 function checkLastMarblePos(turn, lastPos) {
     console.log("-----------------------");
     console.log('check turn ' + turn);
     console.log('me marbles ' + (board[lastPos] - 1));
     console.log(sameSide(turn, lastPos));
     console.log("-----------------------");
+    //if last marble lands on player's own pot, player gets another turn
     if ((turn === 1 && lastPos === potA) || (turn === -1 && lastPos === potB)) {
         return turn;
     } else if (sameSide(turn, lastPos) && ((board[lastPos] - 1) === 0)) {
+        //if last marble lands on player's own side and the slot was empty
+            //player gets all marbles of the slot across from it, then switch turns
         if (turn === 1) {
             console.log(turn);
             board[potA] += board[potB - (lastPos + 1)];
@@ -193,10 +208,12 @@ function checkLastMarblePos(turn, lastPos) {
             return turn *= -1;
         }
     } else {
+        //otherwise, switch turns;
         return turn *= -1;
     }
 }
 
+//check if marbles' position belong to each player's corresponding side
 function sameSide(turn, position) {
     if ((turn === 1 && (position >= 0 && position <= potA))
         || (turn === -1 && (position >= 7 && position < potB))) {
@@ -205,6 +222,7 @@ function sameSide(turn, position) {
     return false;
 }
 
+//if end of game, check for a winner/tie, return winner
 function isWinner() {
     let arrA = board.slice(0, potA);
     let arrB = board.slice(7, potB);
@@ -212,11 +230,13 @@ function isWinner() {
     let sumB = arrB.reduce((a, b) => a + b, 0);
 
     console.log(typeof sumA);
+    //if either sides have no more marbles
     if (sumA === 0 || sumB === 0) {
         console.log('..................');
         console.log(sumA);
         console.log(sumB);
         console.log('...................');
+        //add remainder of marbles of either side to corresponding player's pots
         board[potA] += sumA;
         board[potB] += sumB;
 
@@ -224,19 +244,25 @@ function isWinner() {
         console.log(board[potA]);
         console.log(board[potB]);
         console.log('===================');
+        //check whose pots have more marbles
         if (board[potA] > board[potB]) {
+            //player A wins
             winner = 1;
         } else if (board[potA] < board[potB]) {
+            //player B wins
             winner = -1;
         } else {
+            //tie
             winner = 0;
         }
     }
     return winner;
 }
 
+//show slot selections available/player's side to corresponding player during his/her turn
 function highlightSide() {
     if (turn === 1) {
+        //slots available to player A
         for (let i = 0; i < potA; i++) {
             document.getElementById(`slot${i}`).style.borderColor = PLAYER[turn].color;
         }
@@ -244,6 +270,7 @@ function highlightSide() {
             document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
         }
     } else {
+        //slots available to player B
         for (let i = 0; i < potA; i++) {
             document.getElementById(`slot${i}`).style.borderColor = `rgba(214, 181, 120, 0.822)`;
         }
@@ -253,6 +280,7 @@ function highlightSide() {
     }
 }
 
+//get random pastel colored marbles
 function getRandomColor() {
     var color = "hsl(" + 360 * Math.random() + ',' +
         (25 + 70 * Math.random()) + '%,' +
@@ -260,6 +288,7 @@ function getRandomColor() {
     return color;
 }
 
+//clear appended marbles, when # of marbles in slots are updated
 function clearMarbles() {
     var marbles = document.querySelectorAll('.marble');
     marbles.forEach(function (marble) {
@@ -267,6 +296,7 @@ function clearMarbles() {
     });
 }
 
+//randomly place marbles within circular slots
 function setMarblePlacements() {
     $('.marble').each(function (i) {
         let slotHeight = document.querySelector('.slot').scrollHeight;
@@ -274,15 +304,17 @@ function setMarblePlacements() {
         let marbleLeft = Math.random() * ((slotWidth * 0.5) - (this.offsetWidth * 0.5));
         let marbleTop = Math.random() * ((slotHeight * 0.5) - (this.offsetHeight * 0.5));
         if (this.parentNode.id === 'slot6' || this.parentNode.id === 'slot13') {
+            //position marbles within player's pots (slot6 & slot13)
             let potHeight = document.getElementById('slot6').scrollHeight;
             let potWidth = document.getElementById('slot6').scrollWidth;
             let marblePotLeft = Math.random() * ((potWidth * 0.5) - (this.offsetWidth * 0.5));
             let marblePotTop = Math.random() * ((potHeight * 0.5) - (this.offsetHeight * 0.5));
             $(this).css({
                 left: marblePotLeft + this.offsetWidth * 0.5,
-                top: marblePotTop + this.offsetHeight
+                top: marblePotTop + this.offsetHeight * 1.5
             });
         } else {
+            //position marbles within player's slots
             $(this).css({
                 left: marbleLeft + this.offsetWidth * 0.5,
                 top: marbleTop + this.offsetHeight * 0.5
@@ -292,14 +324,18 @@ function setMarblePlacements() {
     });
 }
 
+//display appropriate msgs during different states of game
 function displayMessage() {
     if (winner === null) {
+        //if not end of game,continue to take turns
         msgEl.textContent = `${PLAYER[turn].name}'s turn`;
         msgEl.style.color = PLAYER[turn].color;
     } else if (winner === 0) {
+        //if no winner and end of game = 'Tie'
         msgEl.textContent = `${PLAYER[winner].name}, play again!`;
         msgEl.style.color = PLAYER[winner].color;
     } else {
+        //end of game, announce winner
         document.getElementById(`slot${PLAYER[winner].pot}`).style.border = `3px solid ${PLAYER[winner].color}`;
         msgEl.textContent = `${PLAYER[winner].name} Won!`;
         msgEl.style.color = PLAYER[winner].color;
@@ -310,16 +346,17 @@ function displayMessage() {
 function showSteps() {
     let time = 1000;
     positionsArray.forEach(function(pos){
+        //hide marble elements of slots
         setTimeout(function(){
             $(`#slot${pos} :not(:first-child)`).css('visibility', 'hidden');
         });
-    
+        //highlights and shows the slots that earned marbles
         setTimeout(function() {
             document.getElementById(`slot${pos}`).classList.add('steps');
             document.querySelector(`#slot${pos}`).firstChild.textContent = board[pos];
             $(`#slot${pos} :not(:first-child)`).css('visibility', 'visible');
         }, time);
-
+        //un-highlight slots for next turn
         setTimeout(function(){
             document.getElementById(`slot${pos}`).classList.remove('steps');
         }, time + 1000);
@@ -328,13 +365,12 @@ function showSteps() {
     return time;
 }
 
+//title effect
 var i = 0;
 var text = 'Mancala';
-var speed = 100;
+var speed = 150;
 
 function titleEffect() {
-
-    
     if(i < text.length) {
         document.querySelector('h1').innerHTML += text.charAt(i);
         i++;
