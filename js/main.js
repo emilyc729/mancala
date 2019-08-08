@@ -97,7 +97,6 @@ function slotClick(evt) {
     //get slotId from click of marble/slot
     if (evt.target.className === 'marble') {
         slotId = parseInt(evt.target.parentNode.id.replace('slot', ''));
-        console.log(slotId);
     } else {
         slotId = parseInt(evt.target.id.replace('slot', ''));
     }
@@ -221,7 +220,6 @@ function isWinner() {
     let sumA = arrA.reduce((a, b) => a + b, 0);
     let sumB = arrB.reduce((a, b) => a + b, 0);
 
-    console.log(typeof sumA);
     //if either sides have no more marbles = game ends
     if (sumA === 0 || sumB === 0) {
         //add remainder of marbles of either side to corresponding player's pots
