@@ -168,6 +168,6 @@ button:hover {
     }
   }
   
-  .box {
-     animation: fontbulger 2s infinite;
-  }
+.box {
+    animation: fontbulger 2s infinite;
+}
