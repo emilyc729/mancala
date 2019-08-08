@@ -26,6 +26,6 @@ Now!
 1. Create an option to play with computer
 2. Make Responsive Design
 3. Add drop animation of marbles 
-4. Add sound 
+4. Add marble movement sounds or background music
 
 
