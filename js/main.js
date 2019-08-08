@@ -45,7 +45,11 @@ function init() {
 
 function render() {
     clearMarbles();
+    //reset css styling of prev game for new game/refresh
     document.getElementById('msg').classList.remove('animate1');
+    document.getElementById(`slot${potA}`).style.border = `2px solid rgba(214, 181, 120, 0.822)`;
+    document.getElementById(`slot${potB}`).style.border = `2px solid rgba(214, 181, 120, 0.822)`;
+
     let time = 0;
 
     //create & update board elements
