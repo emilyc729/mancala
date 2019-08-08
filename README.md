@@ -13,7 +13,7 @@ Mancala is one of my favorite childhood games! In this game you take turns tryin
 3. Javascript
 4. jQuery
 
-##Getting Started
+## Getting Started
 ### Link
 Play 
 [Mancala](https://emilyc729.github.io/mancala/)
