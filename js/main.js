@@ -322,7 +322,7 @@ function displayMessage() {
     } else {
         //end of game, announce winner
         document.getElementById(`slot${PLAYER[winner].pot}`).style.border = `3px solid ${PLAYER[winner].color}`;
-        msgEl.textContent = `${PLAYER[winner].name} Won!`;
+        msgEl.textContent = `${PLAYER[winner].name} Wins!`;
         msgEl.style.color = PLAYER[winner].color;
     }
 }
