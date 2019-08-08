@@ -172,6 +172,7 @@ function slotClick(evt) {
             }
         }
     }
+    
     render();
 }
 
