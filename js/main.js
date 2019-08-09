@@ -54,9 +54,9 @@ function render() {
     //create & update board elements
     board.forEach(function (slotVal, slotIdx) {
         let slot = document.getElementById(`slot${slotIdx}`);
-        
+
         //only apply 'showing steps' to slots that received marbles
-        if(positionsArray.includes(slotIdx)) {
+        if (positionsArray.includes(slotIdx)) {
             time = showSteps();
         } else {
             slot.innerHTML = `<span class="value">${slotVal}</span>`;
@@ -70,7 +70,7 @@ function render() {
         }
         //place marbles within circular slot
         setMarblePlacements();
-        
+
         //dont show selection for slots w/ zero marbles
         if (slotVal === 0) {
             slot.classList.add('disabled');
@@ -79,18 +79,18 @@ function render() {
         }
     });
     //delay display of message and slot selections for next player
-    setTimeout(function() {
+    setTimeout(function () {
         displayMessage();
         highlightSide();
-        
-    }, time);
+
+    }, time + 500);
     //enlarge winner message 
-    setTimeout(function() {
-        if(winner === 1 || winner === -1){
+    setTimeout(function () {
+        if (winner === 1 || winner === -1) {
             document.getElementById('msg').classList.add('animate1');
         }
-    }, time + 500);
-    
+    }, time + 1000);
+
 }
 function slotClick(evt) {
     let slotId = 0;
@@ -115,10 +115,10 @@ function slotClick(evt) {
     positionsArray = [];
     //determine which slot each marble goes into
     while (numMarbles > 0) {
-        
+
         //if player A
-        if(turn === 1) {
-            if(nextPos === potB) {
+        if (turn === 1) {
+            if (nextPos === potB) {
                 //skip player B's pot, circle back to index 0
                 nextPos = 0;
             }
@@ -131,8 +131,8 @@ function slotClick(evt) {
 
         }
         //if player B
-        if(turn === -1) {
-            if(nextPos === potB) {
+        if (turn === -1) {
+            if (nextPos === potB) {
                 //add marble into player B's pot
                 board[nextPos] += 1;
                 positionsArray.push(nextPos);
@@ -140,7 +140,7 @@ function slotClick(evt) {
                 numMarbles--;
                 //circle back to index 0
                 nextPos = 0;
-            } else if(nextPos === potA) {
+            } else if (nextPos === potA) {
                 //skip player A's pot
                 nextPos++;
             } else {
@@ -150,7 +150,7 @@ function slotClick(evt) {
                 board[curPos] -= 1;
                 numMarbles--;
             }
-            
+
         }
         //get last position of marble
         let lastPos = nextPos;
@@ -162,6 +162,7 @@ function slotClick(evt) {
             }
             //get turn
             turn = checkLastMarblePos(turn, lastPos);
+
         }
     }
     //check for a winner
@@ -175,30 +176,28 @@ function slotClick(evt) {
             }
         }
     }
-    
+
     render();
 }
 
 //check last marble's position to determine turn
 function checkLastMarblePos(turn, lastPos) {
-
     //if last marble lands on player's own pot, player gets another turn
     if ((turn === 1 && lastPos === potA) || (turn === -1 && lastPos === potB)) {
         return turn;
     } else if (sameSide(turn, lastPos) && ((board[lastPos] - 1) === 0)) {
         //if last marble lands on player's own side and the slot was empty
-        //player gets all marbles of the slot across from it, then switch turns
-        if (turn === 1) {
-            //slot across from last marble pos = last index(13) - (lastPos) + 1
-            board[potA] += board[13 - (lastPos + 1)];
-            //empty marbles in slot across from last po
+        if(board[13 - (lastPos + 1)] > 0) {
+            //and if there are marbles across from it
+            positionsArray.push(13 - (lastPos + 1));
+                //slot across from last marble pos = last index(13) - (lastPos) + 1
+            //add last marble & marbles in across slot into player's pot
+            board[PLAYER[turn].pot] = board[PLAYER[turn].pot] + board[13 - (lastPos + 1)] + board[lastPos];
+            //empty marbles in slot across from last pos & last pos slot
             board[13 - (lastPos + 1)] = 0;
-            return turn *= -1;
-        } else {
-            board[potB] += board[13- (lastPos + 1)];
-            board[13 - (lastPos + 1)] = 0;
-            return turn *= -1;
+            board[lastPos] -= 1;
         }
+        return turn *= -1;
     } else {
         //otherwise, switch turns;
         return turn *= -1;
@@ -333,19 +332,19 @@ function displayMessage() {
 //show each slot the marble went to & return the total time of function
 function showSteps() {
     let time = 1000;
-    positionsArray.forEach(function(pos){
+    positionsArray.forEach(function (pos) {
         //hide marble elements of slots
-        setTimeout(function(){
+        setTimeout(function () {
             $(`#slot${pos} :not(:first-child)`).css('visibility', 'hidden');
         });
         //give glow and shows the slots that earned marbles
-        setTimeout(function() {
+        setTimeout(function () {
             document.getElementById(`slot${pos}`).classList.add('steps');
             document.querySelector(`#slot${pos}`).firstChild.textContent = board[pos];
             $(`#slot${pos} :not(:first-child)`).css('visibility', 'visible');
         }, time);
         //remove glow on slots for next turn
-        setTimeout(function(){
+        setTimeout(function () {
             document.getElementById(`slot${pos}`).classList.remove('steps');
         }, time + 1000);
         time += 1000;
@@ -359,7 +358,7 @@ var text = 'Mancala';
 var speed = 150;
 
 function titleEffect() {
-    if(i < text.length) {
+    if (i < text.length) {
         document.querySelector('h1').innerHTML += text.charAt(i);
         i++;
         setTimeout(titleEffect, speed);
